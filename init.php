@@ -147,8 +147,8 @@ $kleeja_plugin['kj_recaptcha']['update'] = function ($old_version, $new_version)
         // the type of a site that runs a version before 1.4, which showed reCAPTCHA v2 as soon as it was installed
         $value = $setting['value'];
 
-        if ($name == 'kj_recaptcha_type' && array_key_exists('kj_recaptcha_invisible', $saved)) {
-            $value = $saved['kj_recaptcha_invisible'] == '1' ? '2' : '1';
+        if ($name === 'kj_recaptcha_type' && array_key_exists('kj_recaptcha_invisible', $saved)) {
+            $value = (int) $saved['kj_recaptcha_invisible'] === 1 ? '2' : '1';
         }
 
         $SQL->build([
@@ -573,7 +573,7 @@ if (!function_exists('kj_recaptcha_configs')) {
 
         // v3 shows nothing in the form, its badge is at the corner of the page
         return '<div class="kj-recaptcha"' .
-            ($type == 3 ? ' hidden' : ' style="margin: 1rem 0"') .
+            ($type === 3 ? ' hidden' : ' style="margin: 1rem 0"') .
             ' data-type="' .
             $type .
             '" data-sitekey="' .
@@ -605,7 +605,7 @@ if (!function_exists('kj_recaptcha_configs')) {
         $ERRORS['recaptcha'] = kj_recaptcha_word('KJ_RECAPTCHA_FAILED');
 
         // the login of the control panel ends every error with a full stop of its own
-        if ($action == 'admin_login') {
+        if ($action === 'admin_login') {
             $ERRORS['recaptcha'] = rtrim($ERRORS['recaptcha'], '.');
         }
 
@@ -658,7 +658,7 @@ if (!function_exists('kj_recaptcha_configs')) {
         }
 
         // v3 gives a score instead of a challenge, and the name of the form that asked for the answer
-        if ($type == 3) {
+        if ($type === 3) {
             if (!isset($answer['score']) || (float) $answer['score'] < KJ_RECAPTCHA_MIN_SCORE) {
                 kleeja_log('[kj_recaptcha] ' . $action . ' score too low: ' . ($answer['score'] ?? 'none'));
 
@@ -753,9 +753,9 @@ if (!function_exists('kj_recaptcha_configs')) {
         $prefix = 'KJ_RECAPTCHA_HELP_' . $name;
         $section = ['type' => $type, 'title' => $words[$prefix . '_TITLE'] ?? '', 'items' => []];
 
-        for ($n = 1; isset($words[$prefix . ($type == 'faq' ? '_Q_' : '_') . $n]); $n++) {
+        for ($n = 1; isset($words[$prefix . ($type === 'faq' ? '_Q_' : '_') . $n]); $n++) {
             $section['items'][] =
-                $type == 'faq'
+                $type === 'faq'
                     ? ['q' => $words[$prefix . '_Q_' . $n], 'a' => $words[$prefix . '_A_' . $n] ?? '']
                     : $words[$prefix . '_' . $n];
         }
